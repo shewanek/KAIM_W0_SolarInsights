@@ -1,0 +1,5 @@
+{
+    "python.pythonPath": "week0/bin/python",
+    "editor.formatOnSave": true,
+    "python.linting.enabled": true
+}
