@@ -370,6 +370,60 @@ def humidity_analysis(df):
     print("\nCorrelations with Relative Humidity:")
     print(correlations.round(3))
 
+def distribution_analysis(df):
+    # Create histograms for key variables
+    plt.figure(figsize=(15, 10))
+
+    # Solar radiation variables
+    plt.subplot(2, 3, 1)
+    plt.hist(df['GHI'], bins=50, alpha=0.7)
+    plt.title('Global Horizontal Irradiance Distribution')
+    plt.xlabel('GHI (W/m²)')
+    plt.ylabel('Frequency')
+
+    plt.subplot(2, 3, 2)
+    plt.hist(df['DNI'], bins=50, alpha=0.7)
+    plt.title('Direct Normal Irradiance Distribution')
+    plt.xlabel('DNI (W/m²)')
+    plt.ylabel('Frequency')
+
+    plt.subplot(2, 3, 3)
+    plt.hist(df['DHI'], bins=50, alpha=0.7)
+    plt.title('Diffuse Horizontal Irradiance Distribution')
+    plt.xlabel('DHI (W/m²)')
+    plt.ylabel('Frequency')
+
+    # Temperature variables
+    plt.subplot(2, 3, 4)
+    plt.hist(df['Tamb'], bins=50, alpha=0.7)
+    plt.title('Ambient Temperature Distribution')
+    plt.xlabel('Temperature (°C)')
+    plt.ylabel('Frequency')
+
+    plt.subplot(2, 3, 5)
+    plt.hist(df['TModA'], bins=50, alpha=0.7, label='Module A')
+    plt.hist(df['TModB'], bins=50, alpha=0.7, label='Module B')
+    plt.title('Module Temperatures Distribution')
+    plt.xlabel('Temperature (°C)')
+    plt.ylabel('Frequency')
+    plt.legend()
+
+    # Wind speed
+    plt.subplot(2, 3, 6)
+    plt.hist(df['WS'], bins=50, alpha=0.7)
+    plt.title('Wind Speed Distribution')
+    plt.xlabel('Wind Speed (m/s)')
+    plt.ylabel('Frequency')
+
+    plt.tight_layout()
+    plt.show()
+
+    # Print basic statistics
+    print("\nDistribution Statistics:")
+    print("=" * 50)
+    variables = ['GHI', 'DNI', 'DHI', 'Tamb', 'TModA', 'TModB', 'WS']
+    print(df[variables].describe().round(2))
+
 
 
 
