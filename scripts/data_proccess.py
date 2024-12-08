@@ -456,7 +456,42 @@ def z_score_analysis(df):
         extreme_pct = (extreme_count / len(z_scores) * 100).round(2)
         print(f"{var}: {extreme_count} points ({extreme_pct}%) beyond ±3 standard deviations")
 
+def bubble_plot(df):
+    # Create bubble plots to explore multivariate relationships
+    plt.figure(figsize=(15, 5))
 
+    # GHI vs Tamb vs WS with RH bubbles
+    plt.subplot(1, 2, 1)
+    scatter = plt.scatter(df['Tamb'], df['GHI'], 
+                        s=df['RH']*2, # Scale RH for better visibility
+                        c=df['WS'],
+                        cmap='viridis',
+                        alpha=0.5)
+    plt.colorbar(scatter, label='Wind Speed (m/s)')
+    plt.xlabel('Ambient Temperature (°C)')
+    plt.ylabel('Global Horizontal Irradiance (W/m²)')
+    plt.title('GHI vs Temperature\nBubble Size: Relative Humidity, Color: Wind Speed')
+
+    # GHI vs Tamb vs WS with BP bubbles 
+    plt.subplot(1, 2, 2)
+    scatter = plt.scatter(df['Tamb'], df['GHI'],
+                        s=(df['BP']-df['BP'].min())*5, # Scale BP for visibility
+                        c=df['WS'],
+                        cmap='viridis', 
+                        alpha=0.5)
+    plt.colorbar(scatter, label='Wind Speed (m/s)')
+    plt.xlabel('Ambient Temperature (°C)') 
+    plt.ylabel('Global Horizontal Irradiance (W/m²)')
+    plt.title('GHI vs Temperature\nBubble Size: Barometric Pressure, Color: Wind Speed')
+
+    plt.tight_layout()
+    plt.show()
+
+    # Print correlation matrix for these variables
+    corr_vars = ['GHI', 'Tamb', 'WS', 'RH', 'BP']
+    print("\nCorrelation Matrix:")
+    print("=" * 50)
+    print(df[corr_vars].corr().round(3))
 
 
 
