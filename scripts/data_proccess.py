@@ -287,6 +287,43 @@ def correlation(df):
     plt.suptitle('Wind vs Solar Radiation Relationships', y=1.02)
     plt.show()
 
+def wind_analysis(df):
+    # Wind Analysis
+    plt.figure(figsize=(15, 5))
+
+    # Wind Rose Plot
+    ax1 = plt.subplot(131, projection='polar')
+    wind_freq = df.groupby('WD').size()
+    theta = np.radians(wind_freq.index)
+    ax1.bar(theta, wind_freq.values, width=np.radians(10), alpha=0.5)
+    ax1.set_title('Wind Direction Distribution')
+
+    # Wind Speed Distribution by Direction
+    ax2 = plt.subplot(132, projection='polar')
+    mean_speed = df.groupby('WD')['WS'].mean()
+    theta = np.radians(mean_speed.index)
+    ax2.bar(theta, mean_speed.values, width=np.radians(10), alpha=0.5)
+    ax2.set_title('Average Wind Speed by Direction')
+
+    # Wind Direction Variability
+    ax3 = plt.subplot(133, projection='polar')
+    direction_std = df.groupby('WD')['WDstdev'].mean()
+    theta = np.radians(direction_std.index)
+    ax3.bar(theta, direction_std.values, width=np.radians(10), alpha=0.5)
+    ax3.set_title('Wind Direction Variability')
+
+    plt.tight_layout()
+    plt.show()
+
+    # Additional statistics
+    print("\nWind Statistics:")
+    print("=" * 50)
+    print(f"Average Wind Speed: {df['WS'].mean():.2f} m/s")
+    print(f"Maximum Wind Speed: {df['WS'].max():.2f} m/s")
+    print(f"Maximum Wind Gust: {df['WSgust'].max():.2f} m/s")
+    print(f"\nPredominant Wind Direction: {df.groupby('WD').size().idxmax():.1f}°")
+    print(f"Average Direction Variability: {df['WDstdev'].mean():.2f}°")
+
 
 
 
