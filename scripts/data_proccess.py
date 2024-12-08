@@ -243,5 +243,52 @@ def cleaning_impact(df):
     print("=" * 50)
     print(pct_change)
 
+def correlation(df):
+    # Create correlation matrix for solar and temperature variables
+    solar_temp_vars = ['GHI', 'DNI', 'DHI', 'TModA', 'TModB', 'Tamb']
+    solar_temp_corr = df[solar_temp_vars].corr()
+
+    # Create correlation matrix for wind and solar variables 
+    wind_solar_vars = ['GHI', 'DNI', 'DHI', 'WS', 'WSgust', 'WD']
+    wind_solar_corr = df[wind_solar_vars].corr()
+
+    # Set up the figure with two subplots
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(15, 6))
+
+    # Plot solar-temperature correlations
+    sns.heatmap(solar_temp_corr, 
+                annot=True,
+                cmap='RdBu',
+                center=0,
+                ax=ax1)
+    ax1.set_title('Solar Radiation vs Temperature Correlations')
+
+    # Plot wind-solar correlations
+    sns.heatmap(wind_solar_corr,
+                annot=True, 
+                cmap='RdBu',
+                center=0,
+                ax=ax2)
+    ax2.set_title('Wind vs Solar Radiation Correlations')
+
+    plt.tight_layout()
+    plt.show()
+
+    # Create pair plots for deeper analysis
+    # Solar and temperature variables
+    sns.pairplot(df[solar_temp_vars].sample(1000),
+                diag_kind='kde')
+    plt.suptitle('Solar Radiation vs Temperature Relationships', y=1.02)
+    plt.show()
+
+    # Wind and solar variables
+    sns.pairplot(df[wind_solar_vars].sample(1000),
+                diag_kind='kde')
+    plt.suptitle('Wind vs Solar Radiation Relationships', y=1.02)
+    plt.show()
+
+
+
+
 
 
