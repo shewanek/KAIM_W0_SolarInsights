@@ -425,6 +425,36 @@ def distribution_analysis(df):
     print(df[variables].describe().round(2))
 
 
+def z_score_analysis(df):
+    # Calculate z-scores for key variables
+    variables = ['GHI', 'DNI', 'DHI', 'Tamb', 'TModA', 'TModB', 'WS', 'RH']
+    z_scores = pd.DataFrame()
+
+    for var in variables:
+        z_scores[f'{var}_zscore'] = (df[var] - df[var].mean()) / df[var].std()
+
+    # Plot z-score distributions
+    plt.figure(figsize=(15, 10))
+
+    for i, var in enumerate(variables, 1):
+        plt.subplot(2, 4, i)
+        plt.hist(z_scores[f'{var}_zscore'], bins=50, alpha=0.7)
+        plt.axvline(x=3, color='r', linestyle='--', alpha=0.5, label='±3 SD')
+        plt.axvline(x=-3, color='r', linestyle='--', alpha=0.5)
+        plt.title(f'{var} Z-Score Distribution')
+        plt.xlabel('Z-Score')
+        plt.ylabel('Frequency')
+        
+    plt.tight_layout()
+    plt.show()
+
+    # Print summary of extreme values (|z-score| > 3)
+    print("\nExtreme Value Analysis (|Z-Score| > 3):")
+    print("=" * 50)
+    for var in variables:
+        extreme_count = (abs(z_scores[f'{var}_zscore']) > 3).sum()
+        extreme_pct = (extreme_count / len(z_scores) * 100).round(2)
+        print(f"{var}: {extreme_count} points ({extreme_pct}%) beyond ±3 standard deviations")
 
 
 
