@@ -494,4 +494,66 @@ def bubble_plot(df):
     print(df[corr_vars].corr().round(3))
 
 
+def data_cleaning(df):
+    # Drop the Comments column since it's entirely null
+    df = df.drop('Comments', axis=1)
+
+    # Handle negative irradiance values (physically impossible)
+    df.loc[df['GHI'] < 0, 'GHI'] = 0
+    df.loc[df['DNI'] < 0, 'DNI'] = 0 
+    df.loc[df['DHI'] < 0, 'DHI'] = 0
+
+    # Handle missing values
+    print("\nMissing Values Before Cleaning:")
+    print(df.isnull().sum())
+
+    # Forward fill small gaps in time series data
+    df = df.fillna(method='ffill', limit=3)
+
+    # For any remaining missing values, use median for numeric columns
+    numeric_cols = df.select_dtypes(include=['float64', 'int64']).columns
+    df[numeric_cols] = df[numeric_cols].fillna(df[numeric_cols].median())
+
+    # For categorical columns like Region, fill with mode
+    categorical_cols = df.select_dtypes(include=['object']).columns
+    df[categorical_cols] = df[categorical_cols].fillna(df[categorical_cols].mode().iloc[0])
+
+    print("\nMissing Values After Cleaning:")
+    print(df.isnull().sum())
+
+    # Remove outliers using Z-score method
+    variables = ['GHI', 'DNI', 'DHI', 'Tamb', 'TModA', 'TModB', 'WS', 'RH']
+    z_scores = pd.DataFrame()
+
+    for var in variables:
+        z_scores[f'{var}_zscore'] = (df[var] - df[var].mean()) / df[var].std()
+        
+    # Create mask for rows to keep (z-score within ±3)
+    mask = np.all(np.abs(z_scores) <= 3, axis=1)
+    combined_df_cleaned = df[mask].copy()
+
+    # Remove duplicate timestamps
+    combined_df_cleaned = combined_df_cleaned.drop_duplicates(subset=['Timestamp'])
+
+    # Sort by timestamp
+    combined_df_cleaned = combined_df_cleaned.sort_values('Timestamp')
+
+    # Print summary of changes made
+    print("\nData Cleaning Summary:")
+    print(f"- Dropped Comments column")
+    print(f"- Corrected negative irradiance values to 0")
+    print(f"- Filled small time series gaps using forward fill")
+    print(f"- Filled remaining numeric missing values with median")
+    print(f"- Filled categorical missing values with mode")
+    print(f"- Removed outliers (|z-score| > 3)")
+    print(f"- Removed duplicate timestamps")
+    print(f"\nOriginal dataset shape: {df.shape}")
+    print(f"Final dataset shape: {combined_df_cleaned.shape}")
+    print(f"Total rows removed: {df.shape[0] - combined_df_cleaned.shape[0]}")
+
+    # Save the cleaned dataset to CSV
+    combined_df_cleaned.to_csv('../data/combined_df_cleaned.csv', index=False)
+    print("\nCleaned dataset saved to '../data/combined_df_cleaned.csv'")
+
+
 
