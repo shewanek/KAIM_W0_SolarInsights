@@ -325,6 +325,53 @@ def wind_analysis(df):
     print(f"Average Direction Variability: {df['WDstdev'].mean():.2f}°")
 
 
+def humidity_analysis(df):
+    # Create scatter plots to examine RH relationships
+    plt.figure(figsize=(15, 10))
+
+    plt.subplot(2,2,1)
+    plt.scatter(df['RH'], df['Tamb'], alpha=0.5)
+    plt.title('Relative Humidity vs Ambient Temperature')
+    plt.xlabel('Relative Humidity (%)')
+    plt.ylabel('Temperature (°C)')
+
+    plt.subplot(2,2,2)
+    plt.scatter(df['RH'], df['GHI'], alpha=0.5)
+    plt.title('Relative Humidity vs Global Horizontal Irradiance')
+    plt.xlabel('Relative Humidity (%)')
+    plt.ylabel('GHI (W/m²)')
+
+    plt.subplot(2,2,3)
+    plt.scatter(df['RH'], df['TModA'], alpha=0.5, label='Module A')
+    plt.scatter(df['RH'], df['TModB'], alpha=0.5, label='Module B')
+    plt.title('Relative Humidity vs Module Temperatures')
+    plt.xlabel('Relative Humidity (%)')
+    plt.ylabel('Temperature (°C)')
+
+
+    # Calculate average temperature metrics by RH bins
+    rh_bins = pd.cut(df['RH'], bins=10)
+    avg_by_rh = df.groupby(rh_bins)[['Tamb', 'TModA', 'TModB', 'GHI']].mean()
+    avg_by_rh[['Tamb', 'TModA', 'TModB']].plot(kind='line', marker='o')
+    plt.title('Average Temperatures by RH Range')
+    plt.xlabel('Relative Humidity Range')
+    plt.ylabel('Temperature (°C)')
+    plt.xticks(rotation=45)
+
+    plt.tight_layout()
+    plt.show()
+
+
+    # Print correlation statistics
+    print("\nCorrelation Analysis:")
+    print("=" * 50)
+    corr_vars = ['RH', 'Tamb', 'TModA', 'TModB', 'GHI']
+    correlations = df[corr_vars].corr()['RH'].sort_values(ascending=False)
+    print("\nCorrelations with Relative Humidity:")
+    print(correlations.round(3))
+
+
+
 
 
 
