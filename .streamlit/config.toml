@@ -1,0 +1,12 @@
+[theme]
+base = "dark"  # Set dark mode as default
+
+[client]
+showSidebarNavigation = false  # Hide sidebar hamburger menu
+showErrorDetails = false  # Do not display detailed errors to the user
+toolbarMode = "viewer"  # Show the viewer toolbar
+#keepAliveInterval = 30000  # 30 seconds; ensures a periodic ping to keep the WebSocket alive
+
+[global]
+disableWidgetStateDuplicationWarning = true  # Suppress duplicate widget state warnings
+
