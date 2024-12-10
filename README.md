@@ -67,3 +67,6 @@ MoonLight Energy Solutions faces several strategic challenges:
    ```bash
    pip install -r requirements.txt
 
+here is the link to the data: https://drive.google.com/file/d/1boBQADBu-_QuCWawStJpvZahgzkcerGB/view?usp=sharing
+here is the link to the dashboard:https://solarinsight.streamlit.app/
+
