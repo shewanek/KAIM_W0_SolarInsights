@@ -8,7 +8,7 @@ st.set_page_config(page_title="Solar Data Analysis", layout="wide")
 
 # Add title
 st.title("Solar Data Analysis Dashboard")
-
+st.write("here is the link to the data: https://drive.google.com/file/d/1boBQADBu-_QuCWawStJpvZahgzkcerGB/view?usp=sharing")
 # File uploader
 uploaded_file = st.file_uploader("Upload CSV file", type=['csv'])
 
